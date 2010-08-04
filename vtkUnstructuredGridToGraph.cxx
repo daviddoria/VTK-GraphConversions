@@ -1,8 +1,5 @@
 #include "vtkUnstructuredGridToGraph.h"
 
-//for testing only
-#include "vtkXMLPolyDataWriter.h"
-
 #include "vtkGraphToPolyData.h"
 #include "vtkFloatArray.h"
 #include "vtkPointData.h"
@@ -15,7 +12,6 @@
 #include "vtkMutableUndirectedGraph.h"
 #include "vtkAdjacentVertexIterator.h"
 #include "vtkUnstructuredGrid.h"
-//#include "vtkImageData.h"
 #include "vtkSmartPointer.h"
 
 vtkCxxRevisionMacro(vtkUnstructuredGridToGraph, "$Revision: 1.70 $");
