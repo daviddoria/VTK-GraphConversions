@@ -8,42 +8,80 @@
 
 #include "vtkPolyDataToGraph.h"
 
+void ExampleWithMesh();
+void ExampleWithEdges();
+
 int main (int argc, char *argv[])
 {
-  vtkSmartPointer<vtkSphereSource> sphereSource = 
+  ExampleWithMesh();
+  ExampleWithEdges();
+  
+  return EXIT_SUCCESS;
+}
+
+void ExampleWithMesh()
+{
+ vtkSmartPointer<vtkSphereSource> sphereSource =
       vtkSmartPointer<vtkSphereSource>::New();
   sphereSource->Update();
-    
-  vtkSmartPointer<vtkExtractEdges> extractEdges = 
-      vtkSmartPointer<vtkExtractEdges>::New();
-  extractEdges->SetInputConnection(sphereSource->GetOutputPort());
-  extractEdges->Update();
-  
-  vtkSmartPointer<vtkPolyData> input = extractEdges->GetOutput();
-  
-  {
-  vtkSmartPointer<vtkXMLPolyDataWriter> writer = 
+
+  vtkSmartPointer<vtkPolyData> input = sphereSource->GetOutput();
+
+  vtkSmartPointer<vtkXMLPolyDataWriter> inputWriter =
     vtkSmartPointer<vtkXMLPolyDataWriter>::New();
-  writer->SetFileName("Sphere.vtp");
-  writer->SetInputConnection(input->GetProducerPort());
-  writer->Write();
-  }
-  
-  vtkSmartPointer<vtkPolyDataToGraph> polyDataToGraphFilter = 
+  inputWriter->SetFileName("meshInput.vtp");
+  inputWriter->SetInputConnection(input->GetProducerPort());
+  inputWriter->Write();
+
+  vtkSmartPointer<vtkPolyDataToGraph> polyDataToGraphFilter =
       vtkSmartPointer<vtkPolyDataToGraph>::New();
   polyDataToGraphFilter->SetInputConnection(input->GetProducerPort());
   polyDataToGraphFilter->Update();
-  
-  vtkSmartPointer<vtkGraphToPolyData> graphToPolyDataFilter = 
+
+  vtkSmartPointer<vtkGraphToPolyData> graphToPolyDataFilter =
       vtkSmartPointer<vtkGraphToPolyData>::New();
   graphToPolyDataFilter->SetInputConnection(polyDataToGraphFilter->GetOutputPort());
   graphToPolyDataFilter->Update();
-  
-  vtkSmartPointer<vtkXMLPolyDataWriter> writer = 
+
+  vtkSmartPointer<vtkXMLPolyDataWriter> writer =
       vtkSmartPointer<vtkXMLPolyDataWriter>::New();
-  writer->SetFileName("Graph.vtp");
+  writer->SetFileName("meshGraph.vtp");
   writer->SetInputConnection(graphToPolyDataFilter->GetOutputPort());
   writer->Write();
-  
-  return EXIT_SUCCESS;
+}
+
+void ExampleWithEdges()
+{
+ vtkSmartPointer<vtkSphereSource> sphereSource =
+      vtkSmartPointer<vtkSphereSource>::New();
+  sphereSource->Update();
+
+  vtkSmartPointer<vtkExtractEdges> extractEdges =
+      vtkSmartPointer<vtkExtractEdges>::New();
+  extractEdges->SetInputConnection(sphereSource->GetOutputPort());
+  extractEdges->Update();
+
+  vtkSmartPointer<vtkPolyData> input = extractEdges->GetOutput();
+
+  vtkSmartPointer<vtkXMLPolyDataWriter> inputWriter =
+    vtkSmartPointer<vtkXMLPolyDataWriter>::New();
+  inputWriter->SetFileName("edgesInput.vtp");
+  inputWriter->SetInputConnection(input->GetProducerPort());
+  inputWriter->Write();
+
+  vtkSmartPointer<vtkPolyDataToGraph> polyDataToGraphFilter =
+      vtkSmartPointer<vtkPolyDataToGraph>::New();
+  polyDataToGraphFilter->SetInputConnection(input->GetProducerPort());
+  polyDataToGraphFilter->Update();
+
+  vtkSmartPointer<vtkGraphToPolyData> graphToPolyDataFilter =
+      vtkSmartPointer<vtkGraphToPolyData>::New();
+  graphToPolyDataFilter->SetInputConnection(polyDataToGraphFilter->GetOutputPort());
+  graphToPolyDataFilter->Update();
+
+  vtkSmartPointer<vtkXMLPolyDataWriter> writer =
+      vtkSmartPointer<vtkXMLPolyDataWriter>::New();
+  writer->SetFileName("edgesGraph.vtp");
+  writer->SetInputConnection(graphToPolyDataFilter->GetOutputPort());
+  writer->Write();
 }

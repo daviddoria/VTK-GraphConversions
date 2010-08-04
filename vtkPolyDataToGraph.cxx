@@ -113,28 +113,7 @@ int vtkPolyDataToGraph::RequestData(
   writer->SetInputConnection(graphToPolyData->GetOutputPort());
   writer->Write();
   }
-  
-  /*
-  //copy normals
-  vtkFloatArray* normals = vtkFloatArray::SafeDownCast(input->GetPointData()->GetNormals());
-  if(normals)
-    {
-    output->GetVertexData()->SetNormals(normals);
-    std::cout << "vtkPolyDataToGraph: Copied normals." << std::endl;
-    }
-  else
-    {
-    std::cout << "vtkPolyDataToGraph: No normals to copy." << std::endl;
-    }
-    
-  //copy colors
-  vtkUnsignedCharArray* colors = vtkUnsignedCharArray::SafeDownCast(input->GetPointData()->GetArray("Colors"));
-  if(colors)
-    {
-    output->GetVertexData()->AddArray(colors);
-    }
-  */
-  
+
   return 1;
 }
 

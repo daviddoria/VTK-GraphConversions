@@ -11,7 +11,7 @@
 
 int main (int argc, char *argv[])
 {
-  
+
   vtkSmartPointer<vtkSphereSource> sphereSource =
       vtkSmartPointer<vtkSphereSource>::New();
   sphereSource->Update();
@@ -21,27 +21,24 @@ int main (int argc, char *argv[])
   delaunay->SetInputConnection(sphereSource->GetOutputPort());
   delaunay->Update();
 
-  vtkSmartPointer<vtkXMLUnstructuredGridWriter> ugWriter =
-    vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
-  ugWriter->SetFileName("ug.vtu");
-  ugWriter->SetInputConnection(delaunay->GetOutputPort());
-  ugWriter->Write();
-  
-  vtkSmartPointer<vtkUnstructuredGridToGraph> unstructuredGridToGraphFilter = 
+  vtkSmartPointer<vtkUnstructuredGridToGraph> unstructuredGridToGraphFilter =
       vtkSmartPointer<vtkUnstructuredGridToGraph>::New();
   unstructuredGridToGraphFilter->SetInputConnection(delaunay->GetOutputPort());
   unstructuredGridToGraphFilter->Update();
-  
-  vtkSmartPointer<vtkGraphToPolyData> graphToPolyDataFilter = 
-      vtkSmartPointer<vtkGraphToPolyData>::New();
-  graphToPolyDataFilter->SetInputConnection(unstructuredGridToGraphFilter->GetOutputPort());
-  graphToPolyDataFilter->Update();
-  
-  vtkSmartPointer<vtkXMLPolyDataWriter> pdWriter =
-      vtkSmartPointer<vtkXMLPolyDataWriter>::New();
-  pdWriter->SetFileName("ugGraph.vtp");
-  pdWriter->SetInputConnection(graphToPolyDataFilter->GetOutputPort());
-  pdWriter->Write();
-  
+
+  if(sphereSource->GetOutput()->GetNumberOfPoints() != unstructuredGridToGraphFilter->GetOutput()->GetNumberOfVertices())
+    {
+    std::cerr << "Number of points " << sphereSource->GetOutput()->GetNumberOfPoints()
+      << " does not match number of vertices " << unstructuredGridToGraphFilter->GetOutput()->GetNumberOfVertices() << " !";
+    return EXIT_FAILURE;
+    }
+
+  if(unstructuredGridToGraphFilter->GetOutput()->GetNumberOfEdges() != 234)
+    {
+    std::cerr << "Number of edges " << unstructuredGridToGraphFilter->GetOutput()->GetNumberOfEdges()
+      << " is not correct (should be 234)!" << std::endl;
+    return EXIT_FAILURE;
+    }
+
   return EXIT_SUCCESS;
 }
