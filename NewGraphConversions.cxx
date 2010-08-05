@@ -56,10 +56,9 @@ void MUGtoMDG()
       vtkSmartPointer<vtkMutableDirectedGraph>::New();
   mug->ToDirectedGraph(mdg);
   
-  
-  cout << "Output Type: " << mdg->GetClassName() << endl;
-  cout << "MDG has " << mdg->GetNumberOfVertices() << " vertices." << endl;
-  cout << "MDG has " << mdg->GetNumberOfEdges() << " edges." << endl;
+  std::cout << "Output Type: " << mdg->GetClassName() << std::endl;
+  std::cout << "MDG has " << mdg->GetNumberOfVertices() << " vertices." << std::endl;
+  std::cout << "MDG has " << mdg->GetNumberOfEdges() << " edges." << std::endl;
   
 }
 
@@ -97,10 +96,9 @@ void MDGtoMUG()
       vtkSmartPointer<vtkMutableUndirectedGraph>::New();
   mdg->ToUndirectedGraph(mug);
   
-  
-  cout << "Output Type: " << mug->GetClassName() << endl;
-  cout << "MDG has " << mug->GetNumberOfVertices() << " vertices." << endl;
-  cout << "MDG has " << mug->GetNumberOfEdges() << " edges." << endl;
+  std::cout << "Output Type: " << mug->GetClassName() << std::endl;
+  std::cout << "MDG has " << mug->GetNumberOfVertices() << " vertices." << std::endl;
+  std::cout << "MDG has " << mug->GetNumberOfEdges() << " edges." << std::endl;
   
 }
 
@@ -144,8 +142,8 @@ void TreetoMUG()
   tree->ToUndirectedGraph(mug);
   
   
-  cout << "Output Type: " << mug->GetClassName() << endl;
-  cout << "MDG has " << mug->GetNumberOfVertices() << " vertices." << endl;
-  cout << "MDG has " << mug->GetNumberOfEdges() << " edges." << endl;
+  std::cout << "Output Type: " << mug->GetClassName() << std::endl;
+  std::cout << "MDG has " << mug->GetNumberOfVertices() << " vertices." << std::endl;
+  std::cout << "MDG has " << mug->GetNumberOfEdges() << " edges." << std::endl;
   
 }

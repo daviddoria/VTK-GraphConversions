@@ -1849,7 +1849,12 @@ void vtkGraph::Dump()
 //----------------------------------------------------------------------------
 bool vtkGraph::ToDirectedGraph(vtkDirectedGraph* g)
 {
- if(this->IsA("vtkDirectedGraph"))
+  // This function will convert a vtkUndirectedGraph to a
+  // vtkDirectedGraph. It copies all of the data associated
+  // with the graph by calling CopyInternal. Only one directed
+  // edge is added for each input undirected edge.
+  
+  if(this->IsA("vtkDirectedGraph"))
     {
     // Return the status of CheckedShallowCopy
     return g->CheckedShallowCopy(this);
@@ -1869,34 +1874,32 @@ bool vtkGraph::ToDirectedGraph(vtkDirectedGraph* g)
       {
       m->AddEdge(this->GetSourceVertex(i), this->GetTargetVertex(i));
       }
+    // Force full copy from this, internals will be invalid
+    g->CopyInternal(this, false);
 
-    if (this->IsStructureValid(m))
-      {
-      // Force full copy from this, internals will be invalid
-      g->CopyInternal(this, false);
-
-      // Make internals valid
-      g->SetInternals(m->GetGraphInternals(true));
-      return true;
-      }
-    else
-      {
-      return false;
-      }
+    // Make internals valid
+    g->SetInternals(m->GetGraphInternals(true));
+    return true;
     }
   else
     {
     g = NULL;
     return false;
     }
+    
+  return true;
 }
 
 //----------------------------------------------------------------------------
 bool vtkGraph::ToUndirectedGraph(vtkUndirectedGraph* g)
 {
- if(this->IsA("vtkUndirectedGraph"))
+  // This function will convert a vtkDirectedGraph to a
+  // vtkUndirectedGraph. It copies all of the data associated
+  // with the graph by calling CopyInternal
+  
+  if(this->IsA("vtkUndirectedGraph"))
     {
-    // Return the status of CheckedShallowCopy
+    // A normal CheckedShallowCopy will work fine.
     return g->CheckedShallowCopy(this);
     }
   else if(this->IsA("vtkDirectedGraph"))
@@ -1914,20 +1917,14 @@ bool vtkGraph::ToUndirectedGraph(vtkUndirectedGraph* g)
       {
       m->AddEdge(this->GetSourceVertex(i), this->GetTargetVertex(i));
       }
-
-    if (this->IsStructureValid(m))
-      {
+      
       // Force full copy from this, internals will be invalid
       g->CopyInternal(this, false);
 
       // Make internals valid
       g->SetInternals(m->GetGraphInternals(true));
+    
       return true;
-      }
-    else
-      {
-      return false;
-      }
     }
   else
     {
