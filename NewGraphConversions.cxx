@@ -8,6 +8,7 @@
 
 void MUGtoMDG();
 void MDGtoMUG();
+
 void TreetoMUG();
 
 int main (int, char *[])

@@ -1851,38 +1851,38 @@ bool vtkGraph::ToDirectedGraph(vtkDirectedGraph* g)
 {
  if(this->IsA("vtkDirectedGraph"))
     {
-    g->CheckedShallowCopy(this);
-    return true;
+    // Return the status of CheckedShallowCopy
+    return g->CheckedShallowCopy(this);
     }
   else if(this->IsA("vtkUndirectedGraph"))
     {
     vtkSmartPointer<vtkMutableDirectedGraph> m =
       vtkSmartPointer<vtkMutableDirectedGraph>::New();
-
     for(vtkIdType i = 0; i < this->GetNumberOfVertices(); i++)
       {
       m->AddVertex();
       }
-    
-    m->GetVertexData()->PassData(this->GetVertexData());
-    
-    vtkSmartPointer<vtkEdgeListIterator> edgeIterator = 
-      vtkSmartPointer<vtkEdgeListIterator>::New();
-    this->GetEdges(edgeIterator);
-    while(edgeIterator->HasNext())
+
+    // Need to add edges in the same order by index.
+    // vtkEdgeListIterator does not guarantee this, so we cannot use it.
+    for(vtkIdType i = 0; i < this->GetNumberOfEdges(); i++)
       {
-      vtkEdgeType edge = edgeIterator->Next();
-      m->AddEdge(edge.Source, edge.Target);
-      }
-  
-    if(this->GetPoints())
-      {
-      m->SetPoints(this->GetPoints());
+      m->AddEdge(this->GetSourceVertex(i), this->GetTargetVertex(i));
       }
 
-    g->CheckedShallowCopy(m);
+    if (this->IsStructureValid(m))
+      {
+      // Force full copy from this, internals will be invalid
+      g->CopyInternal(this, false);
 
-    return true;
+      // Make internals valid
+      g->SetInternals(m->GetGraphInternals(true));
+      return true;
+      }
+    else
+      {
+      return false;
+      }
     }
   else
     {
@@ -1894,40 +1894,40 @@ bool vtkGraph::ToDirectedGraph(vtkDirectedGraph* g)
 //----------------------------------------------------------------------------
 bool vtkGraph::ToUndirectedGraph(vtkUndirectedGraph* g)
 {
-  if(this->IsA("vtkUndirectedGraph"))
+ if(this->IsA("vtkUndirectedGraph"))
     {
-    g->CheckedShallowCopy(this);
-    return true;
+    // Return the status of CheckedShallowCopy
+    return g->CheckedShallowCopy(this);
     }
   else if(this->IsA("vtkDirectedGraph"))
     {
     vtkSmartPointer<vtkMutableUndirectedGraph> m =
       vtkSmartPointer<vtkMutableUndirectedGraph>::New();
-
     for(vtkIdType i = 0; i < this->GetNumberOfVertices(); i++)
       {
       m->AddVertex();
       }
-    
-    m->GetVertexData()->PassData(this->GetVertexData());
-    
-    vtkSmartPointer<vtkEdgeListIterator> edgeIterator = 
-      vtkSmartPointer<vtkEdgeListIterator>::New();
-    this->GetEdges(edgeIterator);
-    while(edgeIterator->HasNext())
+
+    // Need to add edges in the same order by index.
+    // vtkEdgeListIterator does not guarantee this, so we cannot use it.
+    for(vtkIdType i = 0; i < this->GetNumberOfEdges(); i++)
       {
-      vtkEdgeType edge = edgeIterator->Next();
-      m->AddEdge(edge.Source, edge.Target);
-      }
-  
-    if(this->GetPoints())
-      {
-      m->SetPoints(this->GetPoints());
+      m->AddEdge(this->GetSourceVertex(i), this->GetTargetVertex(i));
       }
 
-    g->CheckedShallowCopy(m);
+    if (this->IsStructureValid(m))
+      {
+      // Force full copy from this, internals will be invalid
+      g->CopyInternal(this, false);
 
-    return true;
+      // Make internals valid
+      g->SetInternals(m->GetGraphInternals(true));
+      return true;
+      }
+    else
+      {
+      return false;
+      }
     }
   else
     {
