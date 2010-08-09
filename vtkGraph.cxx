@@ -1874,12 +1874,20 @@ bool vtkGraph::ToDirectedGraph(vtkDirectedGraph* g)
       {
       m->AddEdge(this->GetSourceVertex(i), this->GetTargetVertex(i));
       }
-    // Force full copy from this, internals will be invalid
-    g->CopyInternal(this, false);
+      
+    if(g->IsStructureValid(m))
+      {
+      // Force full copy from this, internals will be invalid
+      g->CopyInternal(this, false);
 
-    // Make internals valid
-    g->SetInternals(m->GetGraphInternals(true));
-    return true;
+      // Make internals valid
+      g->SetInternals(m->Internals);
+      return true;
+      }
+    else
+      {
+      return false;
+      }
     }
   else
     {
@@ -1917,14 +1925,21 @@ bool vtkGraph::ToUndirectedGraph(vtkUndirectedGraph* g)
       {
       m->AddEdge(this->GetSourceVertex(i), this->GetTargetVertex(i));
       }
-      
+    
+    if(g->IsStructureValid(m))
+      {
       // Force full copy from this, internals will be invalid
       g->CopyInternal(this, false);
 
       // Make internals valid
-      g->SetInternals(m->GetGraphInternals(true));
+      g->SetInternals(m->Internals);
     
       return true;
+      }
+    else
+      {
+      return false;
+      }
     }
   else
     {
