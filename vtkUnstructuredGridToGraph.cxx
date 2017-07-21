@@ -1,5 +1,4 @@
 #include "vtkUnstructuredGridToGraph.h"
-
 #include "vtkGraphToPolyData.h"
 #include "vtkFloatArray.h"
 #include "vtkPointData.h"
@@ -14,7 +13,6 @@
 #include "vtkUnstructuredGrid.h"
 #include "vtkSmartPointer.h"
 
-vtkCxxRevisionMacro(vtkUnstructuredGridToGraph, "$Revision: 1.70 $");
 vtkStandardNewMacro(vtkUnstructuredGridToGraph);
 
 int vtkUnstructuredGridToGraph::RequestDataObject(vtkInformation *vtkNotUsed(request),
@@ -46,7 +44,6 @@ int vtkMeshToGraph::FillOutputPortInformation(
   return 1;
 }
 */
-
 //----------------------------------------------------------------------------
 int vtkUnstructuredGridToGraph::FillInputPortInformation(
                                             int vtkNotUsed(port), vtkInformation* info)
