@@ -18,7 +18,6 @@
 #include "vtkImageData.h"
 #include "vtkSmartPointer.h"
 
-vtkCxxRevisionMacro(vtkPolyDataToGraph, "$Revision: 1.70 $");
 vtkStandardNewMacro(vtkPolyDataToGraph);
 
 int vtkPolyDataToGraph::RequestDataObject(vtkInformation *vtkNotUsed(request),
@@ -34,17 +33,17 @@ int vtkPolyDataToGraph::RequestDataObject(vtkInformation *vtkNotUsed(request),
   return 1;
 }
 
-/*
+// /*
 //it works with or without this re-implementation
-int vtkMeshToGraph::FillOutputPortInformation(
-  int vtkNotUsed(port), vtkInformation* info)
-{
-  // now add our info
-  info->Set(vtkDataObject::DATA_TYPE_NAME(), "vtkMutableUndirectedGraph");
-  return 1;
-}
-*/
-
+//int vtkMeshToGraph::FillOutputPortInformation(
+//  int vtkNotUsed(port), vtkInformation* info)
+//{
+//   now add our info
+//  info->Set(vtkDataObject::DATA_TYPE_NAME(), "vtkMutableUndirectedGraph");
+//  return 1;
+//}
+//*/
+//
 //----------------------------------------------------------------------------
 int vtkPolyDataToGraph::FillInputPortInformation(
                                             int vtkNotUsed(port), vtkInformation* info)
@@ -104,7 +103,7 @@ int vtkPolyDataToGraph::RequestData(
   
   vtkSmartPointer<vtkGraphToPolyData> graphToPolyData = 
       vtkSmartPointer<vtkGraphToPolyData>::New();
-  graphToPolyData->SetInput(outputGraph);
+  graphToPolyData->SetInputData(outputGraph);
   graphToPolyData->Update();
       
   vtkSmartPointer<vtkXMLPolyDataWriter> writer = 
